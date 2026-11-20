@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kiểm Tra Khớp Gối Trong 60 Giây</title>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --text: #0F172A;
+      --muted: #475569;
+      --teal: #0F766E;
+      --teal-dark: #115E59;
+      --teal-soft: #F0FDFA;
+      --border: #CBD5E1;
+      --warn-bg: #FFFBEB;
+      --warn-border: #D97706;
+      --warn-text: #92400E;
+      --danger-bg: #FEF2F2;
+      --danger-border: #DC2626;
+      --danger-text: #991B1B;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px 14px 48px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--text);
+      background-color: var(--bg);
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--teal-soft);
+      color: var(--teal);
+      border: 1px solid #99F6E4;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .progress-wrap {
+      margin-bottom: 22px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--teal-dark);
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 33.33%;
+      background: var(--teal);
+      transition: width 0.25s ease;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .q-block {
+      margin-bottom: 22px;
+    }
+
+    .q-title {
+      font-weight: 700;
+      font-size: 19px;
+      margin-bottom: 10px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 16px 18px;
+      font-size: 18px;
+      line-height: 1.45;
+      color: var(--text);
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .option-btn.selected {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+      font-weight: 700;
+      box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.15);
+    }
+
+    .nav-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 20px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: #FFFFFF;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--teal-dark);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #F1F5F9;
+      color: var(--text);
+      border: 1px solid #CBD5E1;
+    }
+
+    .btn-secondary:hover {
+      background: #E2E8F0;
+    }
+
+    .btn-cta {
+      margin-top: 14px;
+      background: var(--teal);
+      color: #FFFFFF;
+      padding: 12px 18px;
+      font-size: 17px;
+      border-radius: 10px;
+    }
+
+    .btn-cta:hover {
+      background: var(--teal-dark);
+    }
+
+    .alert-box {
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      border-left: 6px solid;
+    }
+
+    .alert-danger {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger-text);
+    }
+
+    .alert-warn {
+      background: var(--warn-bg);
+      border-color: var(--warn-border);
+      color: var(--warn-text);
+    }
+
+    .info-box {
+      background: var(--teal-soft);
+      border: 1px solid #99F6E4;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+
+    .info-box h3 {
+      margin: 0 0 8px;
+      font-size: 19px;
+      color: var(--teal-dark);
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .note-box {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #F8FAFC;
+      border: 1px dashed #94A3B8;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 520px) {
+      h1 {
+        font-size: 24px;
+      }
+      .card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="badge">HỖ TRỢ VẬN ĐỘNG & CHĂM SÓC KHỚP GỐI</div>
+      <h1>Kiểm Tra Khớp Gối Trong 60 Giây</h1>
+      <p class="subtitle">
+        Trả lời nhanh vài lựa chọn đơn giản để nhận gợi ý chăm sóc vận động và dụng cụ hỗ trợ phù hợp với sinh hoạt hằng ngày.
+      </p>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="stepText">Bước 1 / 3: Vị trí & cảm giác</span>
+          <span id="percentText">33%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <section id="step1">
+        <h2>1. Vị trí hoặc cảm giác khó chịu nổi bật nhất của cô/chú hoặc anh/chị là gì?</h2>
+        <div class="options-grid" id="step1Options">
+          <button type="button" class="option-btn" data-value="front">
+            Mặt trước / quanh xương bánh chè (thường vướng khi đứng lên, ngồi xuống hoặc leo cầu thang)
+          </button>
+          <button type="button" class="option-btn" data-value="sides">
+            Mặt trong hoặc mặt ngoài khớp gối (cảm giác căng hoặc tì lực khi bước chân)
+          </button>
+          <button type="button" class="option-btn" data-value="stiff">
+            Cứng khớp khi mới ngủ dậy hoặc ngồi lâu (cần cử động vài phút mới thấy linh hoạt hơn)
+          </button>
+          <button type="button" class="option-btn" data-value="tired">
+            Mỏi rã rời sau khi đi bộ xa hoặc đứng làm việc nhiều giờ
+          </button>
+        </div>
+
+        <div class="nav-row">
+          <button type="button" class="btn btn-primary" id="toStep2Btn" disabled>
+            Tiếp tục sang Bước 2
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 2 -->
+      <section id="step2" class="hidden">
+        <h2>2. Đánh giá mức độ và sinh hoạt hằng ngày</h2>
+
+        <div class="q-block">
+          <div class="q-title">Câu 2A. Mức độ khó chịu hiện tại như thế nào?</div>
+          <div class="options-grid" data-q="severity">
+            <button type="button" class="option-btn" data-value="mild">
+              Nhẹ — chỉ hơi mỏi hoặc hơi căng thoáng qua
+            </button>
+            <button type="button" class="option-btn" data-value="moderate">
+              Trung bình — khó chịu khi đi lại lâu, leo cầu thang hoặc đứng lên ngồi xuống
+            </button>
+            <button type="button" class="option-btn" data-value="severe">
+              Nặng — đau rõ rệt khi dồn lực hoặc hạn chế đi lại bình thường
+            </button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-title">Câu 2B. Hoạt động nào làm gối khó chịu nhất?</div>
+          <div class="options-grid" data-q="activity">
+            <button type="button" class="option-btn" data-value="stairs">
+              Leo cầu thang / đứng lên ngồi xuống / ngồi thấp
+            </button>
+            <button type="button" class="option-btn" data-value="walking">
+              Đi bộ đường dài / đứng lâu trên nền cứng
+            </button>
+            <button type="button" class="option-btn" data-value="turning">
+              Xoay người / đổi hướng nhanh / vận động thể thao
+            </button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-title">Câu 2C. Có dấu hiệu nào cần lưu ý kèm theo không?</div>
+          <div class="options-grid" data-q="redflag">
+            <button type="button" class="option-btn" data-value="none">
+              Không sưng nóng đỏ, không kẹt khớp
+            </button>
+            <button type="button" class="option-btn" data-value="tight">
+              Chỉ hơi căng tức hoặc mỏi cơ quanh khớp
+            </button>
+            <button type="button" class="option-btn" data-value="acute">
+              Có sưng nóng đỏ rõ, khớp bị kẹt/khóa hoặc mới chấn thương
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-row">
+          <button type="button" class="btn btn-secondary" id="backToStep1Btn">
+            Quay lại
+          </button>
+          <button type="button" class="btn btn-primary" id="toStep3Btn" disabled>
+            Xem kết quả gợi ý
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section id="step3" class="hidden">
+        <h2>3. Kết quả & gợi ý tham khảo</h2>
+        <div id="resultContent"></div>
+
+        <div class="note-box">
+          <strong>Lưu ý tham khảo:</strong> Nội dung trên mang tính chất hướng dẫn vận động và lựa chọn hỗ trợ sinh hoạt phổ thông, không thay thế việc thăm khám và chẩn đoán y khoa trực tiếp. Nếu triệu chứng kéo dài hoặc tăng nặng, nên trao đổi với bác sĩ hoặc chuyên viên vật lý trị liệu.
+        </div>
+
+        <div class="nav-row">
+          <button type="button" class="btn btn-secondary" id="backToStep2Btn">
+            Sửa câu trả lời
+          </button>
+          <button type="button" class="btn btn-primary" id="restartBtn">
+            Làm lại bài kiểm tra
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const state = {
+      area: null,
+      severity: null,
+      activity: null,
+      redflag: null
+    };
+
+    const step1El = document.getElementById("step1");
+    const step2El = document.getElementById("step2");
+    const step3El = document.getElementById("step3");
+    const stepTextEl = document.getElementById("stepText");
+    const percentTextEl = document.getElementById("percentText");
+    const progressFillEl = document.getElementById("progressFill");
+    const toStep2Btn = document.getElementById("toStep2Btn");
+    const toStep3Btn = document.getElementById("toStep3Btn");
+    const resultContentEl = document.getElementById("resultContent");
+
+    function updateProgress(stepNum) {
+      const map = {
+        1: { label: "Bước 1 / 3: Vị trí & cảm giác", pct: "33%" },
+        2: { label: "Bước 2 / 3: Mức độ & sinh hoạt", pct: "67%" },
+        3: { label: "Bước 3 / 3: Kết quả gợi ý", pct: "100%" }
+      };
+      stepTextEl.textContent = map[stepNum].label;
+      percentTextEl.textContent = map[stepNum].pct;
+      progressFillEl.style.width = map[stepNum].pct;
+    }
+
+    function showStep(stepNum) {
+      step1El.classList.toggle("hidden", stepNum !== 1);
+      step2El.classList.toggle("hidden", stepNum !== 2);
+      step3El.classList.toggle("hidden", stepNum !== 3);
+      updateProgress(stepNum);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll("#step1Options .option-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#step1Options .option-btn").forEach((b) => b.classList.remove("selected"));
+        btn.classList.add("selected");
+        state.area = btn.dataset.value;
+        toStep2Btn.disabled = false;
+      });
+    });
+
+    toStep2Btn.addEventListener("click", () => {
+      if (state.area) showStep(2);
+    });
+
+    document.querySelectorAll('#step2 .options-grid[data-q]').forEach((group) => {
+      const qKey = group.dataset.q;
+      group.querySelectorAll(".option-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          group.querySelectorAll(".option-btn").forEach((b) => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          state[qKey] = btn.dataset.value;
+          toStep3Btn.disabled = !(state.severity && state.activity && state.redflag);
+        });
+      });
+    });
+
+    document.getElementById("backToStep1Btn").addEventListener("click", () => showStep(1));
+    document.getElementById("backToStep2Btn").addEventListener("click", () => showStep(2));
+
+    function getBiomechNote() {
+      if (state.area === "front") {
+        return "Vùng trước gối và quanh xương bánh chè thường chịu áp lực lớn khi gối gập sâu, leo cầu thang hoặc đứng lên ngồi xuống; giữ cơ đùi trước khỏe và tránh gập gối quá sâu sẽ giúp khớp nhẹ tải hơn.";
+      }
+      if (state.area === "sides") {
+        return "Cảm giác căng hoặc vướng ở mặt trong hay mặt ngoài gối thường liên quan đến việc lực dồn chưa đều hai bên hoặc nhóm cơ quanh gối đang bị căng cứng khi bước đi.";
+      }
+      if (state.area === "stiff") {
+        return "Cứng gối vào buổi sáng hoặc sau khi ngồi lâu thường đỡ dần khi làm ấm và cử động nhẹ nhàng để khớp lưu thông trơn tru hơn.";
+      }
+      return "Mỏi khớp gối sau khi đi bộ xa hoặc đứng lâu thường do các cơ giữ gối phải làm việc liên tục nhiều giờ nên bắt đầu mỏi và giảm khả năng nâng đỡ khớp.";
+    }
+
+    function getExercises() {
+      return [
+        "<strong>Ấn nhẹ khoeo gối xuống khăn cuộn (tập cơ đùi trước):</strong> Ngồi hoặc nằm duỗi thẳng chân, đặt một chiếc khăn nhỏ cuộn tròn dưới khoeo gối. Nhẹ nhàng ấn mặt sau gối xuống khăn cho cơ đùi trước hơi săn lại, giữ khoảng 5 giây rồi thả lỏng (làm 8–10 lần, dừng ngay nếu thấy đau nhói).",
+        "<strong>Trượt gót chân nhẹ nhàng trên ghế:</strong> Ngồi thẳng lưng trên ghế chắc chắn, trượt gót chân từ từ về phía sau tới mức hơi căng dễ chịu rồi duỗi thẳng lại chậm rãi (làm 8–10 lần mỗi bên, không cố ép quá mức chịu đựng)."
+      ];
+    }
+
+    function getGearAdvice() {
+      const needsExtraSupport = state.severity === "moderate" || state.activity === "stairs" || state.activity === "walking";
+      if (needsExtraSupport) {
+        return "Khi phải đi lại nhiều, đứng lâu hoặc lên xuống cầu thang, có thể cân nhắc dùng <strong>bó gối có thanh hoặc lò xo trợ lực hai bên</strong> để hỗ trợ giữ khớp vững hơn và giảm bớt sức nặng dồn lên gối; nên chọn đúng size vừa vặn, không siết quá chặt gây tức chân.";
+      }
+      return "Với tình trạng nhẹ hoặc chủ yếu hơi mỏi sau sinh hoạt thường ngày, <strong>bó gối thun co giãn nhẹ</strong> giúp giữ ấm quanh khớp và giúp khớp nhận biết tư thế tốt hơn khi di chuyển; khi ngồi nghỉ lâu hoặc đi ngủ nên tháo ra để gối được thư giãn thoải mái.";
+    }
+
+    function getCtaButtonHtml() {
+      return '<a href="https://zalo.me/0938567483" target="_blank" rel="noopener noreferrer" class="btn btn-cta">Xem gợi ý hỗ trợ & trao đổi thêm</a>';
+    }
+
+    function renderResult() {
+      const isAcuteOrSevere = state.redflag === "acute" || state.severity === "severe";
+
+      if (isAcuteOrSevere) {
+        resultContentEl.innerHTML = `
+          <div class="alert-box alert-danger">
+            <strong>Ưu tiên an toàn trước tiên:</strong> Có dấu hiệu cần lưu ý sớm (sưng nóng đỏ, kẹt khớp, mới va chạm/chấn thương hoặc mức độ khó chịu nặng). Nên tạm nghỉ các động tác chịu sức nặng và chưa tự ý đeo đai nẹp siết chặt trước khi được bác sĩ hoặc chuyên viên vật lý trị liệu kiểm tra trực tiếp.
+          </div>
+          <div class="info-box">
+            <h3>Việc nên làm ngay hôm nay</h3>
+            <ul>
+              <li>Cho khớp gối nghỉ ngơi, hạn chế leo cầu thang hoặc ngồi xổm/ngồi bệt.</li>
+              <li>Theo dõi thêm độ sưng, độ nóng của vùng gối và mức độ cử động gập duỗi.</li>
+              <li>Trao đổi sớm với bác sĩ hoặc chuyên viên vật lý trị liệu để được hướng dẫn đúng tình trạng.</li>
+            </ul>
+            ${getCtaButtonHtml()}
+          </div>
+        `;
+        return;
+      }
+
+      const warnHtml = state.severity === "moderate"
+        ? `<div class="alert-box alert-warn">
+            <strong>Lưu ý điều chỉnh nhịp sinh hoạt:</strong> Mức độ khó chịu đang ở mức trung bình. Nên chia nhỏ quãng đi lại, bước từng bậc khi lên xuống cầu thang và dừng ngay nếu thấy gối đau tăng dần.
+          </div>`
+        : "";
+
+      const exList = getExercises().map((item) => `<li>${item}</li>`).join("");
+
+      resultContentEl.innerHTML = `
+        ${warnHtml}
+        <div class="info-box">
+          <h3>Nhận định cơ học dễ hiểu</h3>
+          <p style="margin:0;">${getBiomechNote()}</p>
+        </div>
+        <div class="info-box">
+          <h3>2 bài tập nhẹ nhàng tham khảo tại nhà</h3>
+          <ul>${exList}</ul>
+        </div>
+        <div class="info-box">
+          <h3>Gợi ý dụng cụ hỗ trợ phù hợp</h3>
+          <p style="margin:0;">${getGearAdvice()}</p>
+          ${getCtaButtonHtml()}
+        </div>
+      `;
+    }
+
+    toStep3Btn.addEventListener("click", () => {
+      if (state.severity && state.activity && state.redflag) {
+        renderResult();
+        showStep(3);
+      }
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+      state.area = null;
+      state.severity = null;
+      state.activity = null;
+      state.redflag = null;
+      document.querySelectorAll(".option-btn").forEach((b) => b.classList.remove("selected"));
+      toStep2Btn.disabled = true;
+      toStep3Btn.disabled = true;
+      showStep(1);
+    });
+
+    updateProgress(1);
+  </script>
+</body>
+</html>
